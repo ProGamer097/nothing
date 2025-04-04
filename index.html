@@ -21,8 +21,13 @@
     function playStream() {
       const video = document.getElementById('video');
       const url = document.getElementById('urlInput').value;
+      
       if (Hls.isSupported()) {
-        const hls = new Hls();
+        const hls = new Hls({
+          xhrSetup: function(xhr, url) {
+            xhr.setRequestHeader("Referer", "https://megacloud.club/");
+          }
+        });
         hls.loadSource(url);
         hls.attachMedia(video);
         hls.on(Hls.Events.MANIFEST_PARSED, function () {
