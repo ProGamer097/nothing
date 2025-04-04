@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HLS Player</title>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <style>
+    body { background: #000; color: #fff; text-align: center; font-family: sans-serif; }
+    video { width: 90%; margin-top: 20px; border: 2px solid #fff; }
+    input, button { padding: 10px; margin-top: 15px; width: 80%; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h2>HLS Stream Tester</h2>
+  <input type="text" id="urlInput" placeholder="Paste .m3u8 URL here" />
+  <br><br>
+  <button onclick="playStream()">Play</button>
+  <br><br>
+  <video id="video" controls></video>
+
+  <script>
+    function playStream() {
+      const video = document.getElementById('video');
+      const url = document.getElementById('urlInput').value;
+      if (Hls.isSupported()) {
+        const hls = new Hls();
+        hls.loadSource(url);
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED, function () {
+          video.play();
+        });
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = url;
+        video.addEventListener('loadedmetadata', function () {
+          video.play();
+        });
+      } else {
+        alert("HLS not supported in this browser.");
+      }
+    }
+  </script>
+</body>
+</html>
